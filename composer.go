@@ -2,7 +2,7 @@
  *   Copyright (c) 2021 Anton Brekhov
  *   All rights reserved.
  */
-package main
+package composer
 
 import (
 	"bufio"
@@ -23,7 +23,7 @@ type Composer struct {
 	InitChan int
 }
 
-func main() {
+func CheckRun() {
 	initChan := make(chan int)
 
 	c := New("Mather")
