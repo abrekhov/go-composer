@@ -38,3 +38,28 @@ func TestComposer_Compose(t *testing.T) {
 		})
 	}
 }
+
+func TestCheckOneNum(t *testing.T) {
+	type args struct {
+		x int
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantY int
+	}{
+		// TODO: Add test cases.
+		{
+			name:  "simple2x2",
+			args:  args{x: 2},
+			wantY: 8,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotY := CheckOneNum(tt.args.x); gotY != tt.wantY {
+				t.Errorf("CheckOneNum() = %v, want %v", gotY, tt.wantY)
+			}
+		})
+	}
+}

@@ -44,6 +44,17 @@ func CheckRun() {
 
 }
 
+func CheckOneNum(x int) (y int) {
+	initChan := make(chan int)
+
+	c := New("Mather")
+	outChanValue := c.Compose(initChan, "M10", "M2", "D5")
+	initChan <- x
+	output, _ := outChanValue.Recv()
+	y = output.Interface().(int)
+	return y
+}
+
 func New(name string) *Composer {
 	return &Composer{Name: name}
 }
