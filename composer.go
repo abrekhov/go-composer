@@ -23,6 +23,10 @@ type Composer struct {
 	InitChan int
 }
 
+type Composable interface {
+	Compose()
+}
+
 func CheckRun() {
 	initChan := make(chan int)
 

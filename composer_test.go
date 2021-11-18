@@ -54,10 +54,21 @@ func TestCheckOneNum(t *testing.T) {
 			args:  args{x: 2},
 			wantY: 8,
 		},
+		{
+			name:  "simple6",
+			args:  args{x: 6},
+			wantY: 24,
+		},
+		{
+			name:  "simple20",
+			args:  args{x: 20},
+			wantY: 80,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if gotY := CheckOneNum(tt.args.x); gotY != tt.wantY {
+				t.Logf("Mock:%v, Real:%v", gotY, tt.wantY)
 				t.Errorf("CheckOneNum() = %v, want %v", gotY, tt.wantY)
 			}
 		})
