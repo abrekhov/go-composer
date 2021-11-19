@@ -98,6 +98,9 @@ func (c *Composer) Compose(initChan reflect.Value, fns ...string) reflect.Value 
 	var prevChanValue, nextChanValue reflect.Value
 	for fninx, fn := range fns {
 		fnx := reflect.ValueOf(c).MethodByName(fn)
+		if fnx.IsZero() {
+			fmt.Println("Method not found")
+		}
 		t := fnx.Type()
 		var argList []reflect.Value
 		for j := 0; j < t.NumIn(); j++ {
