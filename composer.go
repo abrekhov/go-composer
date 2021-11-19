@@ -12,26 +12,26 @@ import (
 	"strconv"
 )
 
-// InputData int
-// MultiplierByTwo int int
-// MultiplierByTen int int
-// DeviderByFive int int
-// CheckerOnEven int bool
-
 type Composer struct {
 	Name     string
 	InitChan int
+}
+
+type ChildOfComposer struct {
+	Composer
 }
 
 type Composable interface {
 	Compose()
 }
 
+// Checks!
+
 func CheckRun() {
 	initChan := make(chan int)
 
 	c := New("Mather")
-	outChanValue := c.Compose(reflect.ValueOf(initChan), "M10", "M2", "D5")
+	outChanValue := Compose(c, reflect.ValueOf(initChan), "M10", "M2", "D5")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		integer, err := strconv.Atoi(scanner.Text())
@@ -52,13 +52,25 @@ func CheckOneNum(x int) (y int) {
 	initChan := make(chan int)
 
 	c := New("Mather")
-	outChanValue := c.Compose(reflect.ValueOf(initChan), "M10", "M2", "D5")
+	outChanValue := Compose(c, reflect.ValueOf(initChan), "M10", "M2", "D5")
 	initChan <- x
 	output, _ := outChanValue.Recv()
 	y = output.Interface().(int)
 	return y
 }
 
+func CheckChildOneNum(x int) (y int) {
+	initChan := make(chan int, 100)
+
+	child := &ChildOfComposer{}
+	outChanValue := Compose(child, reflect.ValueOf(initChan), "M10", "M2", "D5")
+	initChan <- x
+	output, _ := outChanValue.Recv()
+	y = output.Interface().(int)
+	return y
+}
+
+// COMPOSER
 func New(name string) *Composer {
 	return &Composer{Name: name}
 }
@@ -89,15 +101,41 @@ func (*Composer) D5(in chan int, out chan int) {
 	}
 }
 
+// CHILDOFCOMPOSER
+
+func (*ChildOfComposer) M10(in chan int, out chan int) {
+	for i := range in {
+		out <- i * 10
+	}
+}
+
+func (*ChildOfComposer) M2(in chan int, out chan int) {
+	for i := range in {
+		out <- i * 2
+	}
+}
+
+func (*ChildOfComposer) D5(in chan int, out chan int) {
+	for i := range in {
+		out <- i / 5
+	}
+}
+
 // https://play.golang.org/p/WJR6tRIpPZ
 // https://golang.hotexamples.com/examples/reflect/-/MakeChan/golang-makechan-function-examples.html
 // https://imatmati.github.io/posts/golang-reflection
 
-func (c *Composer) Compose(initChan reflect.Value, fns ...string) reflect.Value {
+func Compose(i interface{}, initChan reflect.Value, fns ...string) reflect.Value {
 	var outChanValue reflect.Value
 	var prevChanValue, nextChanValue reflect.Value
 	for fninx, fn := range fns {
-		fnx := reflect.ValueOf(c).MethodByName(fn)
+		fnx := reflect.ValueOf(i).MethodByName(fn)
+		if fnx.IsValid() {
+			fmt.Println("Method not found")
+		}
+		if fnx.IsNil() {
+			fmt.Println("Method not found")
+		}
 		if fnx.IsZero() {
 			fmt.Println("Method not found")
 		}

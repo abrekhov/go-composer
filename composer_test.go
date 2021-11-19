@@ -48,3 +48,28 @@ func TestCheckOneNum(t *testing.T) {
 		})
 	}
 }
+
+func TestCheckChildOneNum(t *testing.T) {
+	type args struct {
+		x int
+	}
+	tests := []struct {
+		name  string
+		args  args
+		wantY int
+	}{
+		// TODO: Add test cases.
+		{
+			name:  "simple20",
+			args:  args{x: 20},
+			wantY: 80,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotY := CheckChildOneNum(tt.args.x); gotY != tt.wantY {
+				t.Errorf("CheckChildOneNum() = %v, want %v", gotY, tt.wantY)
+			}
+		})
+	}
+}
