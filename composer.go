@@ -31,7 +31,7 @@ func CheckRun() {
 	initChan := make(chan int)
 
 	c := New("Mather")
-	outChanValue := c.Compose(initChan, "M10", "M2", "D5")
+	outChanValue := c.Compose(reflect.ValueOf(initChan), "M10", "M2", "D5")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		integer, err := strconv.Atoi(scanner.Text())
@@ -52,7 +52,7 @@ func CheckOneNum(x int) (y int) {
 	initChan := make(chan int)
 
 	c := New("Mather")
-	outChanValue := c.Compose(initChan, "M10", "M2", "D5")
+	outChanValue := c.Compose(reflect.ValueOf(initChan), "M10", "M2", "D5")
 	initChan <- x
 	output, _ := outChanValue.Recv()
 	y = output.Interface().(int)
@@ -93,7 +93,7 @@ func (*Composer) D5(in chan int, out chan int) {
 // https://golang.hotexamples.com/examples/reflect/-/MakeChan/golang-makechan-function-examples.html
 // https://imatmati.github.io/posts/golang-reflection
 
-func (c *Composer) Compose(initChan chan int, fns ...string) reflect.Value {
+func (c *Composer) Compose(initChan reflect.Value, fns ...string) reflect.Value {
 	var outChanValue reflect.Value
 	var prevChanValue, nextChanValue reflect.Value
 	for fninx, fn := range fns {
@@ -102,7 +102,8 @@ func (c *Composer) Compose(initChan chan int, fns ...string) reflect.Value {
 		var argList []reflect.Value
 		for j := 0; j < t.NumIn(); j++ {
 			if fninx == 0 && j == 0 {
-				v2 := reflect.ValueOf(initChan)
+				// v2 := reflect.ValueOf(initChan)
+				v2 := initChan
 				prevChanValue = v2
 				argList = append(argList, v2)
 				continue
