@@ -130,14 +130,14 @@ func Compose(i interface{}, initChan reflect.Value, fns ...string) reflect.Value
 	var prevChanValue, nextChanValue reflect.Value
 	for fninx, fn := range fns {
 		fnx := reflect.ValueOf(i).MethodByName(fn)
-		if fnx.IsValid() {
-			fmt.Println("Method not found")
+		if !fnx.IsValid() {
+			fmt.Println("Method not valid")
 		}
 		if fnx.IsNil() {
-			fmt.Println("Method not found")
+			fmt.Println("Method is nil")
 		}
 		if fnx.IsZero() {
-			fmt.Println("Method not found")
+			fmt.Println("Method is zero")
 		}
 		t := fnx.Type()
 		var argList []reflect.Value
